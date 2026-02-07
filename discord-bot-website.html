@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord Bot Dev - Custom Discord Bot Development</title>
+    <meta name="description" content="Create custom Discord bots with unique features and professional designs, tailored for servers to enhance user engagement and automate tasks.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 50%, #0d1b2a 100%);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(88, 101, 242, 0.6);
+            border-radius: 50%;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 0;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #5865F2 0%, #7289DA 50%, #9b59b6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+            text-shadow: 0 0 30px rgba(88, 101, 242, 0.3);
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            margin-left: 40px;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #5865F2, #7289DA);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #5865F2;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #5865F2 0%, #7289DA 100%);
+            color: white;
+            padding: 16px 40px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 16px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(88, 101, 242, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 20px 50px rgba(88, 101, 242, 0.6);
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .hero {
+            padding: 140px 0 100px;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(88, 101, 242, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: pulse 8s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.5;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.2);
+                opacity: 0.8;
+            }
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(88, 101, 242, 0.2);
+            border: 1px solid rgba(88, 101, 242, 0.3);
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: #5865F2;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        .hero-subtitle {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 30px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.7;
+        }
+
+        .bestsellers-label {
+            display: inline-block;
+            background: linear-gradient(135deg, rgba(88, 101, 242, 0.3), rgba(114, 137, 218, 0.3));
+            border: 1px solid rgba(88, 101, 242, 0.4);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #7289DA;
+            margin-bottom: 25px;
+            animation: fadeInUp 1s ease 0.3s both;
+        }
+
+        .hero h1 {
+            font-size: 72px;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #ffffff 0%, #a8a8a8 50%, #5865F2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 1s ease 0.4s both;
+        }
+
+        .hero p {
+            font-size: 22px;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 700px;
+            margin: 0 auto 50px;
+            line-height: 1.8;
+            animation: fadeInUp 1s ease 0.6s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            animation: fadeInUp 1s ease 0.8s both;
+        }
+
+        .services {
+            padding: 100px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 80px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #5865F2, #7289DA, #9b59b6);
+            margin: 20px auto 0;
+            border-radius: 2px;
+        }
+
+        .service-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .service-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            padding: 50px 40px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #5865F2, #7289DA);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-15px);
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(88, 101, 242, 0.3);
+            box-shadow: 0 25px 60px rgba(88, 101, 242, 0.3);
+        }
+
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .service-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #5865F2 0%, #7289DA 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(88, 101, 242, 0.4);
+            transition: all 0.4s ease;
+        }
+
+        .service-card:hover .service-icon {
+            transform: rotateY(180deg);
+            box-shadow: 0 20px 40px rgba(88, 101, 242, 0.5);
+        }
+
+        .service-card h3 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        .service-card p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        .features {
+            padding: 100px 0;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 50px 40px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .feature-item::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            padding: 2px;
+            background: linear-gradient(135deg, rgba(88, 101, 242, 0.3), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .feature-item:hover {
+            background: rgba(88, 101, 242, 0.1);
+            border-color: rgba(88, 101, 242, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .feature-item:hover::before {
+            opacity: 1;
+        }
+
+        .feature-item h4 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+
+        .feature-item p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        .contact {
+            padding: 120px 0;
+            text-align: center;
+        }
+
+        .contact-title {
+            font-size: 56px;
+            font-weight: 800;
+            margin-bottom: 60px;
+            background: linear-gradient(135deg, #5865F2 0%, #7289DA 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            flex-wrap: wrap;
+        }
+
+        .contact-item {
+            text-align: center;
+            padding: 60px 60px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            min-width: 320px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #5865F2, #7289DA);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .contact-item:hover {
+            transform: translateY(-10px);
+            background: rgba(88, 101, 242, 0.15);
+            border-color: rgba(88, 101, 242, 0.3);
+            box-shadow: 0 30px 60px rgba(88, 101, 242, 0.2);
+        }
+
+        .contact-item:hover::before {
+            transform: scaleX(1);
+        }
+
+        .contact-icon {
+            width: 70px;
+            height: 70px;
+            background: rgba(88, 101, 242, 0.2);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 25px;
+            transition: all 0.4s ease;
+        }
+
+        .contact-item:hover .contact-icon {
+            background: linear-gradient(135deg, #5865F2 0%, #7289DA 100%);
+            transform: scale(1.1);
+        }
+
+        .contact-item h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .contact-item a {
+            color: #5865F2;
+            text-decoration: none;
+            font-size: 22px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            display: block;
+        }
+
+        .contact-item a:hover {
+            color: #7289DA;
+            text-shadow: 0 0 20px rgba(88, 101, 242, 0.5);
+        }
+
+        .payment-info {
+            margin-top: 80px;
+            padding: 40px 60px;
+            background: linear-gradient(135deg, rgba(88, 101, 242, 0.1) 0%, rgba(114, 137, 218, 0.1) 100%);
+            border: 2px solid rgba(88, 101, 242, 0.3);
+            border-radius: 20px;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+        }
+
+        .payment-info::before {
+            content: '💡';
+            position: absolute;
+            top: -20px;
+            left: 30px;
+            background: #5865F2;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 20px;
+        }
+
+        .payment-info p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 18px;
+            line-height: 1.8;
+        }
+
+        footer {
+            text-align: center;
+            padding: 50px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        footer p {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 15px;
+        }
+
+        footer .social {
+            margin-top: 20px;
+        }
+
+        footer .social a {
+            color: #5865F2;
+            margin: 0 15px;
+            font-size: 20px;
+            transition: color 0.3s ease;
+        }
+
+        footer .social a:hover {
+            color: #7289DA;
+        }
+
+        @media (max-width: 1024px) {
+            .hero h1 {
+                font-size: 56px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .service-cards,
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-info {
+                flex-direction: column;
+                gap: 30px;
+            }
+
+            .contact-item {
+                width: 100%;
+                max-width: 450px;
+            }
+
+            .section-title {
+                font-size: 36px;
+            }
+
+            .contact-title {
+                font-size: 42px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .hero p {
+                font-size: 18px;
+            }
+
+            .btn-primary {
+                padding: 14px 30px;
+                font-size: 14px;
+            }
+
+            .service-card,
+            .feature-item,
+            .contact-item {
+                padding: 40px 25px;
+            }
+
+            .section-title,
+            .contact-title {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+
+    <div class="container">
+        <nav>
+            <div class="logo">Discord Bot Dev</div>
+            <div class="nav-links">
+                <a href="#services">Services</a>
+                <a href="#features">Features</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <a href="#contact" class="btn-primary">Get Started</a>
+        </nav>
+
+        <section class="hero">
+            <div class="hero-badge">🚀 100% Custom Discord Bots</div>
+            <div class="bestsellers-label">📦 OUR BEST SELLERS + FULL CUSTOMIZATION</div>
+            <h1>Build the Perfect<br>Discord Bot for Your Server</h1>
+            <p class="hero-subtitle">Choose from our best sellers or build something completely unique. Your bot, your rules.</p>
+            <div class="hero-buttons">
+            <a href="#services" class="btn-primary">Explore Best Sellers</a>
+            <a href="#contact" class="btn-primary" style="background: transparent; border: 2px solid #5865F2; box-shadow: none;">Custom Request</a>
+            </div>
+        </section>
+
+        <section id="services" class="services">
+            <h2 class="section-title">Our Best Sellers</h2>
+            <p style="text-align: center; color: rgba(255,255,255,0.6); margin-bottom: 60px; font-size: 18px;">
+                Choose from these popular solutions or customize anything to your exact needs
+            </p>
+            <div class="service-cards">
+                <div class="service-card">
+                    <div class="service-icon">🎯</div>
+                    <h3>Tryout Bots</h3>
+                    <p><strong>POPULAR:</strong> Recruitment automation with scheduling, evaluation forms, performance tracking, and automated result announcements.</p>
+                    <p style="margin-top: 15px; font-size: 14px; color: rgba(255,255,255,0.5);">Customize every step to match your unique application process</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">📋</div>
+                    <h3>Application Bots</h3>
+                    <p><strong>POPULAR:</strong> Multi-step forms, review/approval workflows, and automated notifications for streamlined server management.</p>
+                    <p style="margin-top: 15px; font-size: 14px; color: rgba(255,255,255,0.5);">Add custom fields, approval levels, and your own branding</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">⚙️</div>
+                    <h3>Automation Bots</h3>
+                    <p><strong>POPULAR:</strong> Moderation, welcome/onboarding, role management, and custom automated workflows to save you hours.</p>
+                    <p style="margin-top: 15px; font-size: 14px; color: rgba(255,255,255,0.5);">Create your own logic or modify the templates</p>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 60px;">
+                <p style="font-size: 16px; color: rgba(255,255,255,0.7);">
+                    💡 <strong>Don't see what you need?</strong> Every solution can be customized completely. Just let me know your requirements!
+                </p>
+            </div>
+        </section>
+
+        <section id="features" class="features">
+            <h2 class="section-title">Why Choose Us</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <h4>✨ Customization</h4>
+                    <p>Tailored commands and workflows exactly for your server's needs</p>
+                </div>
+                <div class="feature-item">
+                    <h4>🎨 Clean UI Design</h4>
+                    <p>Professional UI matching your server's aesthetic and branding</p>
+                </div>
+                <div class="feature-item">
+                    <h4>✅ Proven Reliability</h4>
+                    <p>Multiple servers trust me - built with user experience in mind</p>
+                </div>
+                <div class="feature-item">
+                    <h4>🚀 Automation</h4>
+                    <p>Save hours with smart automated systems</p>
+                </div>
+                <div class="feature-item">
+                    <h4>🔧 Fully Custom</h4>
+                    <p>Every bot is built from scratch for your specific requirements</p>
+                </div>
+                <div class="feature-item">
+                    <h4>💬 Ready to Help</h4>
+                    <p>Dedicated support throughout your bot's lifecycle</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="contact">
+            <h2 class="contact-title">Let's Build Together</h2>
+            <div class="contact-info">
+                <div class="contact-item">
+                    <div class="contact-icon">💬</div>
+                    <h4>Discord</h4>
+                    <a href="https://discord.gg/mrrifle202">mrrifle202</a>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">✉️</div>
+                    <h4>Email</h4>
+                    <a href="mailto:discordbotdevs@gmail.com">discordbotdevs@gmail.com</a>
+                </div>
+            </div>
+            <div class="payment-info">
+                <p>💰 Payment is accepted first before a project begins. Flexible payment methods available for discussion - just chat with me!</p>
+            </div>
+        </section>
+
+        <footer>
+            <p>© 2026 Discord Bot Dev. All rights reserved.</p>
+            <div class="social">
+                <a href="https://discord.gg/mrrifle202">Discord</a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particle.style.animationDelay = Math.random() * 10 + 's';
+                particle.style.width = (Math.random() * 4 + 2) + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.opacity = Math.random() * 0.5 + 0.3;
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        createParticles();
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        const animatedElements = document.querySelectorAll('.service-card, .feature-item, .contact-item');
+        animatedElements.forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(40px)';
+            el.style.transition = 'all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            observer.observe(el);
+        });
+
+        // Add mouse parallax effect to particles
+        document.addEventListener('mousemove', (e) => {
+            const particles = document.querySelectorAll('.particle');
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+
+            particles.forEach((particle, index) => {
+                const speed = (index % 3 + 1) * 0.5;
+                const x = (mouseX - 0.5) * speed * 20;
+                const y = (mouseY - 0.5) * speed * 20;
+                particle.style.transform = `translate(${x}px, ${y}px)`;
+            });
+        });
+    </script>
+</body>
+</html>
